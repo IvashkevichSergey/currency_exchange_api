@@ -1,3 +1,9 @@
-/venv/
-/.idea/
-/.git/
+venv/
+.idea/
+.git/
+__pycache__/
+app/__pycache__/
+app/api/__pycache__/
+app/api/models/__pycache__/
+app/settings/__pycache__/
+app/db/__pycache__/
