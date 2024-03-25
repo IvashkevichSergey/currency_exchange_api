@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
-    EXTERNAL_API_KEY: str
+    SECRET_JWT_KEY: str
 
     @property
     def async_database_url(self):
@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        extra = 'allow'
 
 
 settings = Settings()
-
