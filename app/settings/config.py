@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
     SECRET_JWT_KEY: str
+    EXTERNAL_API_KEY: str
 
     @property
     def async_database_url(self):
