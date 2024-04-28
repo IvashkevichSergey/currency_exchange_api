@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Class for .env files operating"""
     DB_HOST: str
     DB_PORT: str
     DB_USER: str

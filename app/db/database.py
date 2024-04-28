@@ -7,9 +7,11 @@ async_session_maker = async_sessionmaker(bind=engine, class_=AsyncSession, expir
 
 
 class Base(DeclarativeBase):
+    """Base declarative class for DB models"""
     pass
 
 
 async def get_session() -> AsyncSession:
+    """Async session generator"""
     async with async_session_maker() as session:
         yield session

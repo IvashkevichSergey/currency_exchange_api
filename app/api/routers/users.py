@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-
 from app.api.models.users import User
 from app.api.schemas.token import Token
 from app.api.schemas.users import UserCreate, UserBase
@@ -13,8 +12,12 @@ from app.utils.user_service import get_user_by_username, create_new_user, auth_u
 auth_router = APIRouter(prefix="/auth")
 
 
-@auth_router.post('/register/', status_code=status.HTTP_201_CREATED)
-async def register_user(user_data: UserCreate, session: AsyncSession = Depends(get_session)):
+@auth_router.post('/register/',
+                  status_code=status.HTTP_201_CREATED,
+                  summary="Sign up a new user",
+                  response_description="Info about new user signing up")
+async def register_user(user_data: UserCreate,
+                        session: AsyncSession = Depends(get_session)):
     """Router for users sign up"""
     user = await get_user_by_username(session, user_data.username)
     if user:
@@ -39,13 +42,21 @@ async def register_user(user_data: UserCreate, session: AsyncSession = Depends(g
 #     return user
 
 
-@auth_router.get('/profile/', response_model=UserBase)
+@auth_router.get('/profile/',
+                 summary="User profile info",
+                 response_description="Short user profile info",
+                 response_model=UserBase)
 def get_me(current_user: User = Depends(check_user_auth)):
+    """Router for getting current user info"""
     return current_user
 
 
-@auth_router.post('/login/', response_model=Token)
+@auth_router.post('/login/',
+                  summary="Login page",
+                  response_description="Bearer token",
+                  response_model=Token)
 async def login_user(user_data: UserCreate, session: AsyncSession = Depends(get_session)):
+    """Router for sign in users"""
     user = await auth_user(session, **user_data.model_dump())
     if not user:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,

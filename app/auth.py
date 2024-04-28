@@ -1,12 +1,10 @@
 from typing import Optional
 from datetime import timedelta, datetime, timezone
-
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
-
 from app.api.models.users import User
 from app.db.database import get_session
 from app.settings.config import settings
@@ -34,6 +32,7 @@ def generate_access_token(username: str, token_expires_delta: Optional[int] = 30
 
 async def check_user_auth(session: AsyncSession = Depends(get_session),
                           token: str = Depends(oauth2_scheme)) -> User:
+    """Service function to decode user from token. Return user model"""
     try:
         payload = jwt.decode(jwt=token, key=settings.SECRET_JWT_KEY, algorithms=[ALGORYTHM])
         username = payload.get("sub")
@@ -43,7 +42,7 @@ async def check_user_auth(session: AsyncSession = Depends(get_session),
                                    "Please, enter correct token or get a new token at /login")
     except jwt.exceptions.ExpiredSignatureError:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-                            detail="Token is expired. Please, get new a token at /login")
+                            detail="Token is expired. Please, get a new token at /login")
     if not username:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail="Username or password not valid")
